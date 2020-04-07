@@ -3,7 +3,7 @@ import { Image, Menu, Form, Input, Icon } from "semantic-ui-react";
 import "./HeaderNav.scss";
 import logo from "../../assets/images/logo.jpg";
 
-const HeaderNav = () => {
+const headerNav = () => {
   return (
     <Menu borderless className="top-menu" fixed="top">
       <Menu.Item header className="logo">
@@ -39,4 +39,4 @@ const HeaderNav = () => {
   );
 };
 
-export default HeaderNav;
+export default headerNav;

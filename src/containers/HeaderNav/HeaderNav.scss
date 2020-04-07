@@ -1,7 +1,8 @@
+@import '../../styles/shared.scss';
 .ui.menu.top-menu {
     border: none;
     .logo {
-        width: 17rem;
+        width: $sidebar-left-width;
     }
 
     .header-icon {
