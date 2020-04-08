@@ -1,4 +1,6 @@
 import React from "react";
+
+import {Link} from 'react-router-dom';
 import { Image, Menu, Form, Input, Icon } from "semantic-ui-react";
 import "./HeaderNav.scss";
 import logo from "../../assets/images/logo.jpg";
@@ -7,7 +9,7 @@ const headerNav = () => {
   return (
     <Menu borderless className="top-menu" fixed="top">
       <Menu.Item header className="logo">
-        <Image src={logo} size="tiny" />
+        <Link to='/'><Image src={logo} size='tiny'/></Link>
       </Menu.Item>
       <Menu.Menu className="nav-container">
         <Menu.Item className="search-input">
