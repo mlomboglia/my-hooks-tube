@@ -5,7 +5,7 @@ import VideoPreview from "../VideoPreview/VideoPreview";
 import VideoGridHeader from "./VideoGridHeader/VideoGridHeader"
 import "./VideoGrid.scss";
 
-const videoGrid = (props) => {
+const VideoGrid = (props) => {
   const divider = props.hideDivider ? null : <Divider />;
 
   return (
@@ -24,4 +24,4 @@ const videoGrid = (props) => {
   );
 };
 
-export default videoGrid;
+export default VideoGrid;

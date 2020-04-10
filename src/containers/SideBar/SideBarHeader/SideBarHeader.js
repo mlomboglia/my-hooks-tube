@@ -2,7 +2,7 @@ import React from "react";
 import { Menu } from "semantic-ui-react";
 import "./SideBarHeader.scss";
 
-const sideBarHeader = (props) => {
+const SideBarHeader = (props) => {
   const heading = props.title ? props.title.toUpperCase() : "";
   return (
     <Menu.Item>
@@ -11,4 +11,4 @@ const sideBarHeader = (props) => {
   );
 };
 
-export default sideBarHeader;
+export default SideBarHeader;

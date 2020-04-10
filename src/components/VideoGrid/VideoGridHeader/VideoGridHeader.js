@@ -2,7 +2,7 @@ import React from 'react';
 
 import './VideoGridHeader.scss'
 
-const videoGridHeader = (props) => {
+const VideoGridHeader = (props) => {
     return (
         <div className='video-grid-header'>
       <span className='title'>{props.title}</span>
@@ -10,4 +10,4 @@ const videoGridHeader = (props) => {
     )
 }
 
-export default videoGridHeader;
+export default VideoGridHeader;

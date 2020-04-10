@@ -2,7 +2,7 @@ import React from "react";
 import { Image } from "semantic-ui-react";
 import "./VideoPreview.scss";
 
-const videoPreview = (props) => {
+const VideoPreview = (props) => {
 
   const horizontal = props.horizontal ? 'horizontal': null;
   return (
@@ -26,4 +26,4 @@ const videoPreview = (props) => {
   );
 };
 
-export default videoPreview;
+export default VideoPreview;

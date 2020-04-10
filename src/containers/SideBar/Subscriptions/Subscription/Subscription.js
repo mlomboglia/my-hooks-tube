@@ -2,7 +2,7 @@ import React from "react";
 import { Icon, Image, Menu } from "semantic-ui-react";
 import "./Subscription.scss";
 
-const subscription = (props) => {
+const Subscription = (props) => {
   let rightElement = null;
   const { broadcasting, amountNewVideos } = props;
   if (broadcasting) {
@@ -24,4 +24,4 @@ const subscription = (props) => {
   );
 };
 
-export default subscription;
+export default Subscription;

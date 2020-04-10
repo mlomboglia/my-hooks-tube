@@ -3,7 +3,7 @@ import Subscription from "./Subscription/Subscription";
 import { Divider } from "semantic-ui-react";
 import SideBarHeader from "../SideBarHeader/SideBarHeader";
 
-const subscriptions = () => {
+const Subscriptions = () => {
   return (
     <React.Fragment>
       <SideBarHeader title="Subscriptions" />
@@ -17,4 +17,4 @@ const subscriptions = () => {
   );
 };
 
-export default subscriptions;
+export default Subscriptions;

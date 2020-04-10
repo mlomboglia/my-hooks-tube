@@ -2,7 +2,7 @@ import React from "react";
 import "./Rating.scss";
 import { Icon, Progress } from "semantic-ui-react";
 
-const rating = (props) => {
+const Rating = (props) => {
   let progress = null;
   if (props.likeCount && props.dislikeCount) {
     const percent =
@@ -25,4 +25,4 @@ const rating = (props) => {
   );
 };
 
-export default rating;
+export default Rating;

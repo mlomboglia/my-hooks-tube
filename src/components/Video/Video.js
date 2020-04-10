@@ -4,7 +4,7 @@ import "./Video.scss";
 
 const BASE_EMBED_URL = "https://www.youtube.com/embed/";
 
-const video = (props) => {
+const Video = (props) => {
   if (!props.id) {
     return null;
   }
@@ -26,4 +26,4 @@ const video = (props) => {
   );
 };
 
-export default video;
+export default Video;

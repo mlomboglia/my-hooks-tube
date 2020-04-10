@@ -6,7 +6,7 @@ import SideBarFooter from './SideBarFooter/SideBarFooter';
 import { Menu, Divider } from "semantic-ui-react";
 import "./SideBar.scss";
 
-const sideBar = () => {
+const SideBar = () => {
   return (
     <Menu borderless vertical stackable fixed="left" className="side-nav">
       <SideBarItem highlight={true} label="Home" icon="home" />
@@ -31,4 +31,4 @@ const sideBar = () => {
   );
 };
 
-export default sideBar;
+export default SideBar;

@@ -4,7 +4,7 @@ import VideoPreview from "../VideoPreview/VideoPreview";
 import NextUpVideo from "./NextUpVideo/NextUpVideo";
 import "./RelatedVideos.scss";
 
-const relatedVideos = () => {
+const RelatedVideos = () => {
   return (
     <div className="related-videos">
       <NextUpVideo />
@@ -15,4 +15,4 @@ const relatedVideos = () => {
   );
 };
 
-export default relatedVideos;
+export default RelatedVideos;

@@ -6,7 +6,7 @@ import Watch from "./containers/Watch/Watch";
 import AppLayout from './components/AppLayout/AppLayout';
 import {Route, Switch} from 'react-router-dom';
 
-const app = () => {
+const App = () => {
   return (
     <AppLayout>
         <Switch>
@@ -17,4 +17,4 @@ const app = () => {
   );
 }
 
-export default app;
+export default App;

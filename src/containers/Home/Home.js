@@ -4,7 +4,7 @@ import VideoGrid from "../../components/VideoGrid/VideoGrid";
 import SideBar from "../SideBar/SideBar";
 import "./Home.scss";
 
-const home = () => {
+const Home = () => {
   return (
     <React.Fragment>
       <SideBar />
@@ -18,4 +18,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;

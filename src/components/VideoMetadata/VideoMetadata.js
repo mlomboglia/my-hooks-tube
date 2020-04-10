@@ -3,7 +3,7 @@ import { Button, Divider, Icon } from "semantic-ui-react";
 import "./VideoMetadata.scss";
 import Rating from "../Rating/Rating";
 
-const videoMetadata = (props) => {
+const VideoMetadata = (props) => {
   const viewCount = Number(props.viewCount).toLocaleString() || "";
 
   return (
@@ -30,4 +30,4 @@ const videoMetadata = (props) => {
   );
 };
 
-export default videoMetadata;
+export default VideoMetadata;
