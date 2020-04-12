@@ -1,21 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import VideoGrid from "../../components/VideoGrid/VideoGrid";
 import SideBar from "../SideBar/SideBar";
+import HomeContent from "./HomeContent/HomeContent";
 import "./Home.scss";
 
-const Home = () => {
+import { connect } from "react-redux";
+import * as videoActions from "../../store/actions/videos";
+import { bindActionCreators } from "redux";
+import { getYoutubeLibraryLoaded } from "../../store/reducers/api";
+
+const Home = (props) => {
+  const { fetchMostPopularVideos, youtubeLibraryLoaded } = props;
+
+  useEffect(() => {
+    fetchMostPopularVideos();
+  }, [fetchMostPopularVideos, youtubeLibraryLoaded]);
+
+  //componentDidUpdate(prevProps) {
+  //  if (this.props.youtubeLibraryLoaded !== prevProps.youtubeLibraryLoaded) {
+  //    this.props.fetchMostPopularVideos();
+  //  }
+  //}
+
   return (
     <React.Fragment>
       <SideBar />
-      <div className="home">
-        <div className="responsive-video-grid-container">
-          <VideoGrid title="Trending" />
-          <VideoGrid title="Autos & Vehicles" hideDivider={true} />
-        </div>
-      </div>
+      <HomeContent />
     </React.Fragment>
   );
 };
 
-export default Home;
+function mapStateToProps(state) {
+  return {
+    youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  const fetchMostPopularVideos = videoActions.mostPopular.request;
+  return bindActionCreators({ fetchMostPopularVideos }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

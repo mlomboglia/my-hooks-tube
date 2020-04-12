@@ -1,20 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Home from "./containers/Home/Home";
 import Watch from "./containers/Watch/Watch";
 
-import AppLayout from './components/AppLayout/AppLayout';
-import {Route, Switch} from 'react-router-dom';
+import AppLayout from "./components/AppLayout/AppLayout";
+import { Route, Switch, withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { youtubeLibraryLoaded } from './store/actions/api';
 
-const App = () => {
+const App = (props) => {
+
+  const { youtubeLibraryLoaded } = props;
+
+  useEffect(() => {
+    window.gapi.load('client', () => {
+      window.gapi.client.setApiKey(process.env.REACT_APP_API_KEY);
+      window.gapi.client.load('youtube', 'v3', () => {
+        youtubeLibraryLoaded();
+      });
+    });
+  }, [youtubeLibraryLoaded]);
+
   return (
     <AppLayout>
-        <Switch>
-          <Route path="/watch" component={Watch}/>
-          <Route path="/" component={Home}/>
-        </Switch>
-      </AppLayout>
+      <Switch>
+        <Route path="/watch" component={Watch} />
+        <Route path="/" component={Home} />
+      </Switch>
+    </AppLayout>
   );
-}
+};
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({youtubeLibraryLoaded}, dispatch);
+};
+
+export default withRouter(connect(null, mapDispatchToProps)(App));
