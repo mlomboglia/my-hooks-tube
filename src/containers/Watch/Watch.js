@@ -6,6 +6,7 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {getYoutubeLibraryLoaded} from '../../store/reducers/api';
 import {getSearchParam} from '../../shared/url';
+import {getChannelId} from '../../store/reducers/videos';
 import WatchContent from './WatchContent/WatchContent';
 
 const Watch = (props) => {
@@ -14,13 +15,12 @@ const Watch = (props) => {
     youtubeLibraryLoaded,
     fetchWatchDetails,
     channelId,
-    history,
-    location
+    history
   } = props;
 
   const getVideoId = useCallback(() => {
-    return getSearchParam(location, 'v');
-  }, [location]);
+    return getSearchParam(props.location, 'v');
+  }, [props.location]);
 
   const fetchWatchContent = useCallback(() => {
     const videoId = getVideoId();
@@ -38,13 +38,14 @@ const Watch = (props) => {
   
   const videoId = getVideoId();
   return (
-    <WatchContent videoId={videoId}/>
+    <WatchContent videoId={videoId} channelId={channelId}/>
   );
 };  
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
     youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
+    channelId: getChannelId(state, props.location, 'v')
   };
 }
 

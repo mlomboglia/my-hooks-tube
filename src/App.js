@@ -7,16 +7,15 @@ import AppLayout from "./components/AppLayout/AppLayout";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { youtubeLibraryLoaded } from './store/actions/api';
+import { youtubeLibraryLoaded } from "./store/actions/api";
 
 const App = (props) => {
-
   const { youtubeLibraryLoaded } = props;
 
   useEffect(() => {
-    window.gapi.load('client', () => {
+    window.gapi.load("client", () => {
       window.gapi.client.setApiKey(process.env.REACT_APP_API_KEY);
-      window.gapi.client.load('youtube', 'v3', () => {
+      window.gapi.client.load("youtube", "v3", () => {
         youtubeLibraryLoaded();
       });
     });
@@ -25,7 +24,10 @@ const App = (props) => {
   return (
     <AppLayout>
       <Switch>
-        <Route path="/watch" component={Watch} />
+        <Route
+          path="/watch"
+          render={() => <Watch key={props.location.key} />}
+        />
         <Route path="/" component={Home} />
       </Switch>
     </AppLayout>
@@ -33,7 +35,7 @@ const App = (props) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({youtubeLibraryLoaded}, dispatch);
+  return bindActionCreators({ youtubeLibraryLoaded }, dispatch);
 };
 
 export default withRouter(connect(null, mapDispatchToProps)(App));
