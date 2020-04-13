@@ -1,22 +1,57 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 
-import "./Watch.scss";
-import Video from "../../components/Video/Video";
-import RelatedVideos from '../../components/RelatedVideos/RelatedVideos';
-import VideoMetadata from '../../components/VideoMetadata/VideoMetadata';
-import VideoInfoBox from '../../components/VideoInfoBox/VideoInfoBox';
-import Comments from '../Comments/Comments';
+import {bindActionCreators} from 'redux';
+import * as watchActions from '../../store/actions/watch';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {getYoutubeLibraryLoaded} from '../../store/reducers/api';
+import {getSearchParam} from '../../shared/url';
+import WatchContent from './WatchContent/WatchContent';
 
-const Watch = () => {
+const Watch = (props) => {
+
+  const {
+    youtubeLibraryLoaded,
+    fetchWatchDetails,
+    channelId,
+    history,
+    location
+  } = props;
+
+  const getVideoId = useCallback(() => {
+    return getSearchParam(location, 'v');
+  }, [location]);
+
+  const fetchWatchContent = useCallback(() => {
+    const videoId = getVideoId();
+    if(!videoId) {
+      history.push('/');
+    }
+    fetchWatchDetails(videoId, channelId);
+  }, [fetchWatchDetails, getVideoId, channelId, history]);
+
+  useEffect(() => {
+    if (youtubeLibraryLoaded) {
+      fetchWatchContent();
+    }
+  }, [fetchWatchContent, youtubeLibraryLoaded, fetchWatchDetails])
+  
+  const videoId = getVideoId();
   return (
-    <div className='watch-grid'>
-        <Video className='video' id='-7fuHEEmEjs' />
-        <VideoMetadata className='metadata' viewCount={1000}/>
-        <VideoInfoBox className='video-info-box'/>
-        <Comments className='comments'/>
-        <RelatedVideos className='relatedVideos'/>
-      </div>
+    <WatchContent videoId={videoId}/>
   );
 };  
 
-export default Watch; 
+function mapStateToProps(state) {
+  return {
+    youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  const fetchWatchDetails = watchActions.details.request;
+  return bindActionCreators({fetchWatchDetails}, dispatch);
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Watch));
+

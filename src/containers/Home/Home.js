@@ -41,7 +41,7 @@ const Home = (props) => {
 
   //useEffect(() => {
   //  fetchVideosByCategory();
-  //}, [fetchVideosByCategory]);
+  //}, [fetchVideosByCategory, fetchMostPopularVideosByCategory, categoryIndex, videoCategories]);
 
   const bottomReachedCallback = () => {
     if (!props.videoCategoriesLoaded) {
