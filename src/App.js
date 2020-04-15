@@ -8,6 +8,7 @@ import { Route, Switch, withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { youtubeLibraryLoaded } from "./store/actions/api";
+import Trending from './containers/Trending/Trending';
 
 const App = (props) => {
   const { youtubeLibraryLoaded } = props;
@@ -24,11 +25,9 @@ const App = (props) => {
   return (
     <AppLayout>
       <Switch>
-        <Route
-          path="/watch"
-          render={() => <Watch key={props.location.key} />}
-        />
-        <Route path="/" component={Home} />
+          <Route path="/feed/trending" component={Trending}/>
+          <Route path="/watch" render={() => <Watch key={this.props.location.key}/>}/>
+          <Route path="/" component={Home}/>
       </Switch>
     </AppLayout>
   );

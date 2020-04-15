@@ -1,7 +1,7 @@
 import React from "react";
 import { Image } from "semantic-ui-react";
 import "./VideoPreview.scss";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 import { getShortNumberString } from "../../shared/number-format";
 import { getVideoDurationString } from "../../shared/date-format";
@@ -31,9 +31,12 @@ const VideoPreview = (props) => {
   const videoDuration = getVideoDurationString(duration);
   const viewAndTimeString = getFormattedViewAndTime(video);
   const horizontal = props.horizontal ? "horizontal" : null;
+  const expanded = props.expanded ? "expanded" : null;
+  const description = props.expanded ? video.snippet.description : null;
+
   return (
     <Link to={{ pathname: props.pathname, search: props.search }}>
-      <div className={["video-preview", horizontal].join(" ")}>
+      <div className={["video-preview", horizontal, expanded].join(" ")}>
         <div className="image-container">
           <Image src={video.snippet.thumbnails.medium.url} />
           <div className="time-label">
@@ -42,14 +45,15 @@ const VideoPreview = (props) => {
         </div>
 
         <div className="video-info">
-          <div className="semi-bold show-max-two-lines">
+          <div
+            className={["semi-bold", "show-max-two-lines", expanded].join(" ")}
+          >
             {video.snippet.title}
           </div>
           <div className="video-preview-metadata-container">
             <div className="channel-title">{video.snippet.channelTitle}</div>
-            <div>
-              <span>{viewAndTimeString}</span>
-            </div>
+            <div className="view-and-time">{viewAndTimeString}</div>
+            <div className="show-max-two-lines">{description}</div>
           </div>
         </div>
       </div>
