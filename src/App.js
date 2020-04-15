@@ -26,7 +26,7 @@ const App = (props) => {
     <AppLayout>
       <Switch>
           <Route path="/feed/trending" component={Trending}/>
-          <Route path="/watch" render={() => <Watch key={this.props.location.key}/>}/>
+          <Route path="/watch" render={() => <Watch key={props.location.key}/>}/>
           <Route path="/" component={Home}/>
       </Switch>
     </AppLayout>
