@@ -4,22 +4,23 @@ import "./Comment.scss";
 import { Button, Image } from "semantic-ui-react";
 import Rating from "../../../components/Rating/Rating";
 
-const Comment = () => {
+const Comment = (props) => {
+
+  if (!props.comment) {
+    return <div/>;
+  }
+  const topLevelComment = props.comment.snippet.topLevelComment;
+  const {authorProfileImageUrl, authorDisplayName, textOriginal} = topLevelComment.snippet;
+  const likeCount = topLevelComment.snippet.likeCount;
+
   return (
-    <div className="comment">
-      <Image
-        className="user-image"
-        src="http://via.placeholder.com/48x48"
-        circular
-      />
+    <div className='comment'>
+      <Image className='user-image' src={authorProfileImageUrl} circular />
       <div>
-        <div className="user-name">User name</div>
-        <span>Comment text</span>
-        <div className="comment-actions">
-          <Rating likeCount={1} />{" "}
-          <Button size="mini" compact>
-            REPLY
-          </Button>
+        <div className='user-name'>{authorDisplayName}</div>
+        <span>{textOriginal}</span>
+        <div className='comment-actions'>
+          <Rating likeCount={likeCount}/> <Button size='mini' compact>REPLY</Button>
         </div>
       </div>
     </div>

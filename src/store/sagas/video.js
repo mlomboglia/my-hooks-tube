@@ -8,7 +8,7 @@ export const fetchVideoCategories = fetchEntity.bind(
   null,
   api.buildVideoCategoriesRequest,
   videoActions.categories
-);
+); 
 
 export function* fetchMostPopularVideosByCategory(categories) {
   const requests = categories.map((categoryId) => {

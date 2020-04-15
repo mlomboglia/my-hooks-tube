@@ -133,29 +133,27 @@ function reduceRelatedVideosRequest(responses) {
   return {
     totalResults: pageInfo.totalResults,
     nextPageToken,
-    items: relatedVideoIds,
+    items: relatedVideoIds
   };
 }
 
 function reduceVideoDetails(responses, prevState) {
-  const videoResponses = responses.filter(
-    (response) => response.result.kind === VIDEO_LIST_RESPONSE
-  );
+  const videoResponses = responses.filter(response => response.result.kind === VIDEO_LIST_RESPONSE);
   const parsedVideos = videoResponses.reduce((videoMap, response) => {
-    // we're explicitly asking for a video with a particular id
-    // so the response set must either contain 0 items (if a video with the id does not exist)
-    // or at most one item (i.e. the channel we've been asking for)
-    const video = response.result.items ? response.result.items[0] : null;
-    if (!video) {
+      // we're explicitly asking for a video with a particular id
+      // so the response set must either contain 0 items (if a video with the id does not exist)
+      // or at most one item (i.e. the channel we've been asking for)
+      const video = response.result.items ? response.result.items[0] : null;
+      if (!video) {
+        return videoMap;
+      }
+      videoMap[video.id] = video;
       return videoMap;
-    }
-    videoMap[video.id] = video;
-    return videoMap;
-  }, {});
+    }, {});
 
   return {
     ...prevState,
-    byId: { ...prevState.byId, ...parsedVideos },
+    byId: {...prevState.byId, ...parsedVideos},
   };
 }
 
@@ -245,18 +243,15 @@ const getRelatedVideoIds = (state, videoId) => {
 };
 export const getRelatedVideos = createSelector(
   getRelatedVideoIds,
-  (state) => state.videos.byId,
+  state => state.videos.byId,
   (relatedVideoIds, videos) => {
     if (relatedVideoIds) {
       // filter kicks out null values we might have
-      console.log("relatedVideoIds");
-      return relatedVideoIds
-        .map((videoId) => videos[videoId])
-        .filter((video) => video);
+      return relatedVideoIds.map(videoId => videos[videoId]).filter(video => video);
     }
     return [];
-  }
-);
+  });
+
 
 export const getChannelId = (state, location, name) => {
   const videoId = getSearchParam(location, name);

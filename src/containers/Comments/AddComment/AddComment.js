@@ -13,7 +13,7 @@ const AddComment = () => {
       <Form>
         <Form.TextArea
           control={TextArea}
-          autoHeight
+          autoheight="true"
           placeholder="Add a public comment"
         />
       </Form>
