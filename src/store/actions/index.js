@@ -2,14 +2,23 @@ export const REQUEST = "REQUEST";
 export const SUCCESS = "SUCCESS";
 export const FAILURE = "FAILURE";
 
-export function createRequestTypes(base) {
-  if (!base) {
+export function createRequestTypes(action) {
+  if (!action) {
     throw new Error("cannot create request type with base = '' or base = null");
   }
-  return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
-    acc[type] = `${base}_${type}`;
-    return acc;
-  }, {});
+
+  return [REQUEST, SUCCESS, FAILURE].reduce(
+      (result, type) => Object.assign({}, result, { [type]: `${action}_${type}` }),
+      {}
+    );
+  
+  //console.log(base);
+  //return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
+  //  console.log(acc);
+  //  console.log(type);
+  //  acc[type] = `${base}_${type}`;
+  //  return acc;
+  //}, {});
 }
 
 export function createAction(type, payload = {}) {
@@ -18,3 +27,13 @@ export function createAction(type, payload = {}) {
     ...payload,
   };
 }
+
+export function ignoreErrors(fn, ...args) {
+  return () => {
+    const ignoreErrorCallback = (response) => response;
+    return fn(...args).then(ignoreErrorCallback, ignoreErrorCallback);
+  };
+}
+
+
+

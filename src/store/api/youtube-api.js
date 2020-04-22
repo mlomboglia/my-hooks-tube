@@ -5,6 +5,7 @@ export function buildVideoCategoriesRequest() {
     {
       part: "snippet",
       regionCode: "US",
+      key: process.env.REACT_APP_API_KEY
     },
     null
   );
@@ -32,6 +33,7 @@ export function buildMostPopularVideosRequest(
       pageToken: nextPageToken,
       fields,
       videoCategoryId,
+      key: process.env.REACT_APP_API_KEY
     },
     null
   );
@@ -112,23 +114,23 @@ export function buildRelatedVideosRequest(videoId, amountRelatedVideos = 12) {
    */
 export function buildApiRequest(requestMethod, path, params, properties) {
   params = removeEmptyParams(params);
-  let request;
+  let config;
   if (properties) {
     let resource = createResource(properties);
-    request = window.gapi.client.request({
-      body: resource,
+    config = {
+      data: resource,
       method: requestMethod,
-      path: path,
+      url: path,
       params: params,
-    });
+    };
   } else {
-    request = window.gapi.client.request({
+    config = {
       method: requestMethod,
-      path: path,
+      url: path,
       params: params,
-    });
+    };
   }
-  return request;
+  return config;
 }
 
 function removeEmptyParams(params) {

@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import "./Search.scss";
 
-import { getYoutubeLibraryLoaded } from "../../store/reducers/api";
 import {
   getSearchNextPageToken,
   getSearchResults,
@@ -13,7 +12,7 @@ import { getSearchParam } from "../../shared/url";
 import VideoList from '../../components/VideoList/VideoList';
 
 const Search = (props) => {
-  const { youtubeApiLoaded, history } = props;
+  const { history } = props;
 
   const getSearchQuery = useCallback(() => {
     return getSearchParam(props.location, "search_query");
@@ -21,10 +20,9 @@ const Search = (props) => {
 
   const searchForVideos = useCallback(() => {
     const searchQuery = getSearchQuery();
-    if (youtubeApiLoaded) {
       searchForVideos(searchQuery);
-    }
-  }, [youtubeApiLoaded, getSearchQuery]);
+    
+  }, [getSearchQuery]);
 
   const bottomReachedCallback = () => {
     if(props.nextPageToken) {
@@ -38,7 +36,7 @@ const Search = (props) => {
       history.push("/");
     }
     searchForVideos();
-  }, [getSearchQuery, searchForVideos, youtubeApiLoaded, history]);
+  }, [getSearchQuery, searchForVideos, history]);
 
   return (
     <VideoList
@@ -55,7 +53,6 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state, props) {
   return {
-    youtubeApiLoaded: getYoutubeLibraryLoaded(state),
     searchResults: getSearchResults(state, props.location.search),
     nextPageToken: getSearchNextPageToken(state, props.location.search),
   };

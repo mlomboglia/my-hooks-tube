@@ -6,13 +6,13 @@ import {
   allMostPopularVideosLoaded,
   getMostPopularVideos,
   getMostPopularVideosNextPageToken,
-} from "../../store/reducers/videos";
+} from "../../store/reducers/videos1";
 import * as videoActions from "../../store/actions/videos";
-import { getYoutubeLibraryLoaded } from "../../store/reducers/api";
+//import { getYoutubeLibraryLoaded } from "../../store/reducers/api";
 import VideoList from "../../components/VideoList/VideoList";
 
 const Trending = (props) => {
-  const { youtubeLibraryLoaded, fetchMostPopularVideos, nextPageToken } = props;
+  const { fetchMostPopularVideos, nextPageToken } = props;
 
   const shouldShowLoader = () => {
     return !props.allMostPopularVideosLoaded;
@@ -21,13 +21,13 @@ const Trending = (props) => {
   const loaderActive = shouldShowLoader();
 
   useEffect(() => {
-    if (youtubeLibraryLoaded && nextPageToken) {
+    if (nextPageToken) {
       fetchMostPopularVideos(20, true, nextPageToken);
     }
-  }, [youtubeLibraryLoaded, fetchMostPopularVideos, nextPageToken]);
+  }, [fetchMostPopularVideos, nextPageToken]);
 
   const fetchMoreVideos = () => {
-    if (youtubeLibraryLoaded && nextPageToken) {
+    if (nextPageToken) {
       props.fetchMostPopularVideos(12, true, nextPageToken);
     }
   };
@@ -44,8 +44,8 @@ const Trending = (props) => {
 function mapStateToProps(state) {
   return {
     videos: getMostPopularVideos(state),
-    youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
-    allMostPopularVideosLoaded: allMostPopularVideosLoaded(state),
+    //youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
+    //allMostPopularVideosLoaded: allMostPopularVideosLoaded(state),
     nextPageToken: getMostPopularVideosNextPageToken(state),
   };
 }

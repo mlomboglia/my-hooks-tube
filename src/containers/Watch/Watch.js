@@ -4,9 +4,9 @@ import {bindActionCreators} from 'redux';
 import * as watchActions from '../../store/actions/watch';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {getYoutubeLibraryLoaded} from '../../store/reducers/api';
+//import {getYoutubeLibraryLoaded} from '../../store/reducers/api';
 import {getSearchParam} from '../../shared/url';
-import {getChannelId} from '../../store/reducers/videos';
+import {getChannelId} from '../../store/reducers/videos1';
 import {getCommentNextPageToken} from '../../store/reducers/comments';
 import WatchContent from './WatchContent/WatchContent';
 import * as commentActions from '../../store/actions/comments';
@@ -14,7 +14,7 @@ import * as commentActions from '../../store/actions/comments';
 const Watch = (props) => {
 
   const {
-    youtubeLibraryLoaded,
+    //youtubeLibraryLoaded,
     fetchWatchDetails,
     channelId,
     history
@@ -39,10 +39,9 @@ const Watch = (props) => {
   };
 
   useEffect(() => {
-    if (youtubeLibraryLoaded) {
       fetchWatchContent();
-    }
-  }, [fetchWatchContent, youtubeLibraryLoaded, fetchWatchDetails])
+    
+  }, [fetchWatchContent, fetchWatchDetails])
   
   const videoId = getVideoId();
   return (
@@ -56,7 +55,7 @@ const Watch = (props) => {
 
 function mapStateToProps(state, props) {
   return {
-    youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
+    //youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
     channelId: getChannelId(state, props.location, 'v'),
     nextPageToken: getCommentNextPageToken(state, props.location),
   };

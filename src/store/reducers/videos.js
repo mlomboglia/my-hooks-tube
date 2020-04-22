@@ -1,28 +1,28 @@
 import {
   MOST_POPULAR,
-  MOST_POPULAR_BY_CATEGORY,
   VIDEO_CATEGORIES,
+  MOST_POPULAR_BY_CATEGORY,
 } from "../actions/videos";
-import { VIDEO_DETAILS, WATCH_DETAILS } from "../actions/watch";
 import { SUCCESS } from "../actions";
 import { createSelector } from "reselect";
-import { getSearchParam } from "../../shared/url";
 import {
   VIDEO_LIST_RESPONSE,
   SEARCH_LIST_RESPONSE,
 } from "../api/youtube-api-response-types";
+import { VIDEO_DETAILS, WATCH_DETAILS } from "../actions/watch";
 
-export const initialState = {
+const initialState = {
   byId: {},
   mostPopular: {},
   categories: {},
   byCategory: {},
   related: {},
 };
-export default function videos(state = initialState, action) {
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case MOST_POPULAR[SUCCESS]:
-      return reduceFetchMostPopularVideos(action.response, state);
+      return reduceFetchMostPopularVideos(action.videos, state);
     case VIDEO_CATEGORIES[SUCCESS]:
       return reduceFetchVideoCategories(action.response, state);
     case MOST_POPULAR_BY_CATEGORY[SUCCESS]:
@@ -38,9 +38,11 @@ export default function videos(state = initialState, action) {
     default:
       return state;
   }
-}
+};
+export default reducer;
 
 function reduceFetchMostPopularVideos(response, prevState) {
+  console.log(response);
   const videoMap = response.items.reduce((accumulator, video) => {
     accumulator[video.id] = video;
     return accumulator;
@@ -101,6 +103,29 @@ function reduceFetchMostPopularVideosByCategory(
   };
 }
 
+function groupVideosByIdAndCategory(response) {
+  const videos = response.items;
+  const byId = {};
+  const byCategory = {
+    totalResults: response.pageInfo.totalResults,
+    nextPageToken: response.nextPageToken,
+    items: [],
+  };
+
+  videos.forEach((video) => {
+    byId[video.id] = video;
+
+    const items = byCategory.items;
+    if (items && items) {
+      items.push(video.id);
+    } else {
+      byCategory.items = [video.id];
+    }
+  });
+
+  return { byId, byCategory };
+}
+
 function reduceWatchDetails(responses, prevState) {
   const videoDetailResponse = responses.find(
     (r) => r.result.kind === VIDEO_LIST_RESPONSE
@@ -133,56 +158,56 @@ function reduceRelatedVideosRequest(responses) {
   return {
     totalResults: pageInfo.totalResults,
     nextPageToken,
-    items: relatedVideoIds
+    items: relatedVideoIds,
   };
 }
 
 function reduceVideoDetails(responses, prevState) {
-  const videoResponses = responses.filter(response => response.result.kind === VIDEO_LIST_RESPONSE);
+  const videoResponses = responses.filter(
+    (response) => response.result.kind === VIDEO_LIST_RESPONSE
+  );
   const parsedVideos = videoResponses.reduce((videoMap, response) => {
-      // we're explicitly asking for a video with a particular id
-      // so the response set must either contain 0 items (if a video with the id does not exist)
-      // or at most one item (i.e. the channel we've been asking for)
-      const video = response.result.items ? response.result.items[0] : null;
-      if (!video) {
-        return videoMap;
-      }
-      videoMap[video.id] = video;
+    // we're explicitly asking for a video with a particular id
+    // so the response set must either contain 0 items (if a video with the id does not exist)
+    // or at most one item (i.e. the channel we've been asking for)
+    const video = response.result.items ? response.result.items[0] : null;
+    if (!video) {
       return videoMap;
-    }, {});
+    }
+    videoMap[video.id] = video;
+    return videoMap;
+  }, {});
 
   return {
     ...prevState,
-    byId: {...prevState.byId, ...parsedVideos},
+    byId: { ...prevState.byId, ...parsedVideos },
   };
 }
 
-function groupVideosByIdAndCategory(response) {
-  const videos = response.items;
-  const byId = {};
-  const byCategory = {
-    totalResults: response.pageInfo.totalResults,
-    nextPageToken: response.nextPageToken,
-    items: [],
-  };
+/**
+ * Selectors
+ */
+export const getVideoCategoryIds = createSelector(
+  (state) => state.videos.categories,
+  (categories) => {
+    return Object.keys(categories || {});
+  }
+);
 
-  videos.forEach((video) => {
-    byId[video.id] = video;
+export const videoCategoriesLoaded = createSelector(
+  (state) => state.videos.categories,
+  (categories) => {
+    return Object.keys(categories || {}).length !== 0;
+  }
+);
 
-    const items = byCategory.items;
-    if (items && items) {
-      items.push(video.id);
-    } else {
-      byCategory.items = [video.id];
-    }
-  });
+export const videosByCategoryLoaded = createSelector(
+  (state) => state.videos.byCategory,
+  (videosByCategory) => {
+    return Object.keys(videosByCategory || {}).length;
+  }
+);
 
-  return { byId, byCategory };
-}
-
-/*
- *   Selectors
- * */
 const getMostPopular = (state) => state.videos.mostPopular;
 export const getMostPopularVideos = createSelector(
   (state) => state.videos.byId,
@@ -192,12 +217,6 @@ export const getMostPopularVideos = createSelector(
       return [];
     }
     return mostPopular.items.map((videoId) => videosById[videoId]);
-  }
-);
-export const getVideoCategoryIds = createSelector(
-  (state) => state.videos.categories,
-  (categories) => {
-    return Object.keys(categories || {});
   }
 );
 
@@ -220,20 +239,6 @@ export const getVideosByCategory = createSelector(
   }
 );
 
-export const videoCategoriesLoaded = createSelector(
-  (state) => state.videos.categories,
-  (categories) => {
-    return Object.keys(categories || {}).length !== 0;
-  }
-);
-
-export const videosByCategoryLoaded = createSelector(
-  (state) => state.videos.byCategory,
-  (videosByCategory) => {
-    return Object.keys(videosByCategory || {}).length;
-  }
-);
-
 export const getVideoById = (state, videoId) => {
   return state.videos.byId[videoId];
 };
@@ -243,24 +248,17 @@ const getRelatedVideoIds = (state, videoId) => {
 };
 export const getRelatedVideos = createSelector(
   getRelatedVideoIds,
-  state => state.videos.byId,
+  (state) => state.videos.byId,
   (relatedVideoIds, videos) => {
     if (relatedVideoIds) {
       // filter kicks out null values we might have
-      return relatedVideoIds.map(videoId => videos[videoId]).filter(video => video);
+      return relatedVideoIds
+        .map((videoId) => videos[videoId])
+        .filter((video) => video);
     }
     return [];
-  });
-
-
-export const getChannelId = (state, location, name) => {
-  const videoId = getSearchParam(location, name);
-  const video = state.videos.byId[videoId];
-  if (video) {
-    return video.snippet.channelId;
   }
-  return null;
-};
+);
 
 export const getAmountComments = createSelector(getVideoById, (video) => {
   if (video) {
@@ -268,18 +266,3 @@ export const getAmountComments = createSelector(getVideoById, (video) => {
   }
   return 0;
 });
-
-export const allMostPopularVideosLoaded = createSelector(
-  [getMostPopular],
-  (mostPopular) => {
-    const amountFetchedItems = mostPopular.items ? mostPopular.items.length : 0;
-    return amountFetchedItems === mostPopular.totalResults;
-  }
-);
-
-export const getMostPopularVideosNextPageToken = createSelector(
-  [getMostPopular],
-  (mostPopular) => {
-    return mostPopular.nextPageToken;
-  }
-);

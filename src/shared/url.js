@@ -5,3 +5,10 @@ export const getSearchParam = (location, name) => {
   const searchParams = new URLSearchParams(location.search);
   return searchParams.get(name);
 };
+
+export const updateObject = (oldObject, updatedProperties) => {
+  return {
+      ...oldObject,
+      ...updatedProperties
+  };
+};

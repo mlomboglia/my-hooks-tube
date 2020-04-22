@@ -16,7 +16,7 @@ export function* fetchMostPopularVideosByCategory(categories) {
       api.buildMostPopularVideosRequest,
       12,
       false,
-      null,
+      null, 
       categoryId
     );
     return call(wrapper);
