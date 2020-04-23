@@ -79,14 +79,16 @@ export const fetchMostPopularVideosByCategory = (categories) => {
   console.log("fetchMostPopularVideosByCategory");
   return (dispatch) => {
     dispatch(mostPopularByCategory.request(categories));
+    console.log(categories);
     const requests = categories.map((categoryId) => {
-      return ignoreErrors(
-        api.buildMostPopularVideosRequest(12, false, null, categoryId)
+      //return ignoreErrors(
+      return (
+        axios.get(api.buildMostPopularVideosRequest(12, false, null, categoryId))
       );
       //return call(wrapper);
     });
-    console.log("fetchMostPopularVideosByCategory");
-    axios
+    console.log(requests); 
+    Promise
       .all(requests)
       .then((responses) => {
         console.log(responses);

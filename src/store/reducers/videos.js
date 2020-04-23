@@ -42,7 +42,6 @@ const reducer = (state = initialState, action) => {
 export default reducer;
 
 function reduceFetchMostPopularVideos(response, prevState) {
-  console.log(response);
   const videoMap = response.items.reduce((accumulator, video) => {
     accumulator[video.id] = video;
     return accumulator;

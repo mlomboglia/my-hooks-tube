@@ -3,52 +3,84 @@ import React, { useState, useEffect, useCallback } from "react";
 import SideBar from "../SideBar/SideBar";
 import HomeContent from "./HomeContent/HomeContent";
 import "./Home.scss";
-import { connect } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import {
   getVideoCategoryIds,
   videoCategoriesLoaded,
-  videosByCategoryLoaded
-  } from "../../store/reducers/videos";
+  videosByCategoryLoaded,
+} from "../../store/reducers/videos";
 import * as videoActions from "../../store/actions/videos";
 
 const Home = (props) => {
- 
   const [categoryIndex, setCategoryIndex] = useState(0);
-  const { fetchMostPopularVideos, fetchVideoCategories, fetchMostPopularVideosByCategory, videoCategories } = props;
+
+  //Dispatch
+  const dispatch = useDispatch();
+  const dispatchMostPopularVideos = useCallback(
+    () => dispatch(videoActions.fetchMostPopularVideos()),
+    [dispatch]
+  );
+  const dispatchVideoCategories = useCallback(
+    () => dispatch(videoActions.fetchVideoCategories()),
+    [dispatch]
+  );
+  const dispatchMostPopularVideosByCategory = useCallback(
+    (categories) =>
+      dispatch(videoActions.fetchMostPopularVideosByCategory(categories)),
+    [dispatch]
+  );
+
+  //Selector
+  const videoCategories = useSelector((state) => {
+    return getVideoCategoryIds(state);
+  }, shallowEqual);
+
+  const isVideoCategoriesLoaded = useSelector((state) => {
+    return videoCategoriesLoaded(state);
+  }, shallowEqual);
+
+  const isVideosByCategoryLoaded = useSelector((state) => {
+    return videosByCategoryLoaded(state);
+  }, shallowEqual);
 
   useEffect(() => {
-    fetchMostPopularVideos();
-  }, [fetchMostPopularVideos]);
-
+    console.log("useEffect: dispatchMostPopularVideos");
+    dispatchMostPopularVideos();
+  }, [dispatchMostPopularVideos]);
 
   useEffect(() => {
-    fetchVideoCategories();
-  }, [fetchVideoCategories]);
+    console.log("useEffect: dispatchVideoCategories");
+    dispatchVideoCategories();
+  }, [dispatchVideoCategories]);
 
-  const fetchVideosByCategory = useCallback(() => {
+  /*
+  const dispatchVideosByCategory = useCallback(() => {
     console.log("fetchVideosByCategory");
+    console.log(categoryIndex);
     const categories = videoCategories.slice(categoryIndex, categoryIndex + 3);
-    fetchMostPopularVideosByCategory(categories);
+    console.log(categories.length);
+    dispatchMostPopularVideosByCategory(categories);
     setCategoryIndex(categoryIndex + 3);
-  }, [fetchMostPopularVideosByCategory, categoryIndex, videoCategories]);
+  }, [dispatchMostPopularVideosByCategory, categoryIndex, videoCategories]);
 
   useEffect(() => {
-    fetchVideosByCategory();
-  }, [fetchVideosByCategory, fetchMostPopularVideosByCategory, videoCategories]);
-  
+    console.log("dispatchVideoCategories");
+    if (videoCategories.length > 0) {
+      dispatchVideosByCategory();
+    }
+  }, [dispatchVideosByCategory, videoCategories]);
+*/
   const bottomReachedCallback = () => {
-    console.log("bottomReachCallback1");
-    console.log(props.videoCategoriesLoaded);
-    if (!props.videoCategoriesLoaded) {
+    console.log(isVideoCategoriesLoaded);
+    if (!isVideoCategoriesLoaded) {
       return;
     }
-    console.log("bottomReachCallback2");
-    fetchVideosByCategory();
+    //fetchVideosByCategory();
   };
 
   const shouldShowLoader = () => {
-    if (props.videoCategoriesLoaded) {
-      return categoryIndex < props.videoCategories.length;
+    if (isVideoCategoriesLoaded && isVideosByCategoryLoaded) {
+      return categoryIndex < videoCategories.length;
     }
     return false;
   };
@@ -64,20 +96,4 @@ const Home = (props) => {
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    videoCategories: getVideoCategoryIds(state),
-    videoCategoriesLoaded: videoCategoriesLoaded(state),
-    videosByCategoryLoaded: videosByCategoryLoaded(state),
-  };
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchMostPopularVideos: () => dispatch(videoActions.fetchMostPopularVideos()),
-    fetchVideoCategories:  () => dispatch(videoActions.fetchVideoCategories()),
-    fetchMostPopularVideosByCategory: (categories) => dispatch(videoActions.fetchMostPopularVideosByCategory(categories))
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;
