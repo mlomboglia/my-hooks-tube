@@ -1,17 +1,16 @@
 import axios from "../../axios-youtube";
 import * as api from "../api/youtube-api";
 
-import {
-  createAction,
-  createRequestTypes,
-} from "./index";
+import { createAction, createRequestTypes } from "./index";
 
-import {SEARCH_LIST_RESPONSE, VIDEO_LIST_RESPONSE} from '../api/youtube-api-response-types';
+import {
+  SEARCH_LIST_RESPONSE,
+  VIDEO_LIST_RESPONSE,
+} from "../api/youtube-api-response-types";
 
 export const WATCH_DETAILS = createRequestTypes("WATCH_DETAILS");
 export const details = {
-  request: (videoId, channelId) =>
-    createAction(WATCH_DETAILS.REQUEST, { videoId, channelId }),
+  request: () => createAction(WATCH_DETAILS.REQUEST),
   success: (response, videoId) =>
     createAction(WATCH_DETAILS.SUCCESS, { response, videoId }),
   failure: (response) => createAction(WATCH_DETAILS.FAILURE, { response }),
@@ -30,23 +29,23 @@ export const fetchWatchDetails = (videoId, channelId) => {
   return (dispatch) => {
     dispatch(details.request());
     let requests = [
-      axios.request(api.buildVideoDetailRequest(null, videoId)),
-      axios.request(api.buildRelatedVideosRequest(null, videoId)),
-      axios.request(api.buildCommentThreadRequest(null, videoId)),
+      axios.request(api.buildVideoDetailRequest(videoId)),
+      axios.request(api.buildRelatedVideosRequest(videoId)),
+      axios.request(api.buildCommentThreadRequest(videoId)),
     ];
 
     if (channelId) {
-      requests.push(axios.request(api.buildChannelRequest(null, channelId)));
+      requests.push(axios.request(api.buildChannelRequest(channelId)));
     }
 
     Promise.all(requests)
-    .then((responses) => {
-      dispatch(details.success(responses, videoId));
-    })
-    .catch((err) => {
-      console.log(err);
-      dispatch(details.failure(err));
-    });
+      .then((responses) => {
+        dispatch(details.success(responses, videoId));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(details.failure(err));
+      });
   };
 };
 

@@ -13,7 +13,7 @@ import * as commentsActions from "../../store/actions/comments";
 const Watch = (props) => {
   const dispatch = useDispatch();
   const dispatchWatchDetails = useCallback(
-    () => dispatch(watchActions.fetchWatchDetails()),
+    (videoId, channelId) => dispatch(watchActions.fetchWatchDetails(videoId, channelId)),
     [dispatch]
   );
 

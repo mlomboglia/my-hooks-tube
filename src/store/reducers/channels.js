@@ -19,14 +19,15 @@ const reducer = (state = initialState, action) => {
 export default reducer;
 
 function reduceWatchDetails(responses, prevState) {
+  console.log(responses);
   const channelResponse = responses.find(
-    (response) => response.result.kind === CHANNEL_LIST_RESPONSE
+    (response) => response.data.kind === CHANNEL_LIST_RESPONSE
   );
   let channels = {};
-  if (channelResponse && channelResponse.result.items) {
+  if (channelResponse && channelResponse.data.items) {
     // we know that there will only be one item
     // because we ask for a channel with a specific id
-    const channel = channelResponse.result.items[0];
+    const channel = channelResponse.data.items[0];
     channels[channel.id] = channel;
   }
   return {
@@ -40,14 +41,14 @@ function reduceWatchDetails(responses, prevState) {
 
 function reduceVideoDetails(responses, prevState) {
   const channelResponse = responses.find(
-    (response) => response.result.kind === CHANNEL_LIST_RESPONSE
+    (response) => response.data.kind === CHANNEL_LIST_RESPONSE
   );
   let channelEntry = {};
-  if (channelResponse && channelResponse.result.items) {
+  if (channelResponse && channelResponse.data.items) {
     // we're explicitly asking for a channel with a particular id
     // so the response set must either contain 0 items (if a channel with the specified id does not exist)
     // or at most one item (i.e. the channel we've been asking for)
-    const channel = channelResponse.result.items[0];
+    const channel = channelResponse.data.items[0];
     channelEntry = {
       [channel.id]: channel,
     };

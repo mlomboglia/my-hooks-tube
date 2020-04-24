@@ -93,6 +93,7 @@ export function buildSearchRequest(query, nextPageToken, amount = 12) {
       type: "video",
       pageToken: nextPageToken,
       maxResults: amount,
+      key: process.env.REACT_APP_API_KEY,
     },
     null
   );
@@ -107,6 +108,7 @@ export function buildRelatedVideosRequest(videoId, amountRelatedVideos = 12) {
       type: "video",
       maxResults: amountRelatedVideos,
       relatedToVideoId: videoId,
+      key: process.env.REACT_APP_API_KEY,
     },
     null
   );

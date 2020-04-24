@@ -128,12 +128,13 @@ function groupVideosByIdAndCategory(response) {
 }
 
 function reduceWatchDetails(responses, prevState) {
+  console.log(responses);
   const videoDetailResponse = responses.find(
-    (r) => r.result.kind === VIDEO_LIST_RESPONSE
+    (r) => r.data.kind === VIDEO_LIST_RESPONSE
   );
   // we know that items will only have one element
   // because we explicitly asked for a video with a specific id
-  const video = videoDetailResponse.result.items[0];
+  const video = videoDetailResponse.data.items[0];
   const relatedEntry = reduceRelatedVideosRequest(responses);
 
   return {
@@ -151,9 +152,9 @@ function reduceWatchDetails(responses, prevState) {
 
 function reduceRelatedVideosRequest(responses) {
   const relatedVideosResponse = responses.find(
-    (r) => r.result.kind === SEARCH_LIST_RESPONSE
+    (r) => r.data.kind === SEARCH_LIST_RESPONSE
   );
-  const { pageInfo, items, nextPageToken } = relatedVideosResponse.result;
+  const { pageInfo, items, nextPageToken } = relatedVideosResponse.data;
   const relatedVideoIds = items.map((video) => video.id);
 
   return {
@@ -165,13 +166,13 @@ function reduceRelatedVideosRequest(responses) {
 
 function reduceVideoDetails(responses, prevState) {
   const videoResponses = responses.filter(
-    (response) => response.result.kind === VIDEO_LIST_RESPONSE
+    (response) => response.data.kind === VIDEO_LIST_RESPONSE
   );
   const parsedVideos = videoResponses.reduce((videoMap, response) => {
     // we're explicitly asking for a video with a particular id
     // so the response set must either contain 0 items (if a video with the id does not exist)
     // or at most one item (i.e. the channel we've been asking for)
-    const video = response.result.items ? response.result.items[0] : null;
+    const video = response.data.items ? response.data.items[0] : null;
     if (!video) {
       return videoMap;
     }

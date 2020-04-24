@@ -22,9 +22,9 @@ export default function (state = initialState, action) {
 
 function reduceWatchDetails(responses, videoId, prevState) {
   const commentThreadResponse = responses.find(
-    (res) => res.result.kind === COMMENT_THREAD_LIST_RESPONSE
+    (res) => res.data.kind === COMMENT_THREAD_LIST_RESPONSE
   );
-  return reduceCommentThread(commentThreadResponse.result, videoId, prevState);
+  return reduceCommentThread(commentThreadResponse.data, videoId, prevState);
 }
 
 function reduceCommentThread(response, videoId, prevState) {
