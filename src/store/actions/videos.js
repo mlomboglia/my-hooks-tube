@@ -1,11 +1,7 @@
 import axios from "../../axios-youtube";
 import * as api from "../api/youtube-api";
 
-import {
-  createAction,
-  createRequestTypes,
-  ignoreErrors,
-} from "./index";
+import { createAction, createRequestTypes } from "./index";
 
 export const MOST_POPULAR = createRequestTypes("MOST_POPULAR");
 export const mostPopular = {
@@ -76,27 +72,17 @@ export const fetchVideoCategories = () => {
 };
 
 export const fetchMostPopularVideosByCategory = (categories) => {
-  console.log("fetchMostPopularVideosByCategory");
   return (dispatch) => {
     dispatch(mostPopularByCategory.request(categories));
-    console.log(categories);
     const requests = categories.map((categoryId) => {
-      //return ignoreErrors(
-      return (
-        axios.get(api.buildMostPopularVideosRequest(12, false, null, categoryId))
+      return axios.request(
+        api.buildMostPopularVideosRequest(12, false, null, categoryId)
       );
-      //return call(wrapper);
     });
-    console.log(requests); 
-    Promise
-      .all(requests)
+
+    Promise.all(requests.map((p) => p.catch((e) => e)))
       .then((responses) => {
-        console.log(responses);
-        responses.map((response) => {
-          return dispatch(
-            mostPopularByCategory.success(response.data, categories)
-          );
-        });
+        dispatch(mostPopularByCategory.success(responses, categories));
       })
       .catch((err) => {
         console.log(err);

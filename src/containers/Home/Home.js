@@ -53,29 +53,24 @@ const Home = (props) => {
     dispatchVideoCategories();
   }, [dispatchVideoCategories]);
 
-  /*
   const dispatchVideosByCategory = useCallback(() => {
-    console.log("fetchVideosByCategory");
-    console.log(categoryIndex);
     const categories = videoCategories.slice(categoryIndex, categoryIndex + 3);
-    console.log(categories.length);
     dispatchMostPopularVideosByCategory(categories);
     setCategoryIndex(categoryIndex + 3);
   }, [dispatchMostPopularVideosByCategory, categoryIndex, videoCategories]);
 
   useEffect(() => {
-    console.log("dispatchVideoCategories");
     if (videoCategories.length > 0) {
       dispatchVideosByCategory();
     }
-  }, [dispatchVideosByCategory, videoCategories]);
-*/
+  }, [videoCategories]);
+
   const bottomReachedCallback = () => {
     console.log(isVideoCategoriesLoaded);
     if (!isVideoCategoriesLoaded) {
       return;
     }
-    //fetchVideosByCategory();
+    dispatchVideosByCategory();
   };
 
   const shouldShowLoader = () => {

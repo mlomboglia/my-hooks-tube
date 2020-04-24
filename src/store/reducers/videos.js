@@ -84,12 +84,13 @@ function reduceFetchMostPopularVideosByCategory(
   let videoMap = {};
   let byCategoryMap = {};
 
+  console.log("reduceFetchMostPopularVideosByCategory");
   responses.forEach((response, index) => {
     // ignore answer if there was an error
-    if (response.status === 400) return;
+    if (response instanceof Error) return;
 
     const categoryId = categories[index];
-    const { byId, byCategory } = groupVideosByIdAndCategory(response.result);
+    const { byId, byCategory } = groupVideosByIdAndCategory(response.data);
     videoMap = { ...videoMap, ...byId };
     byCategoryMap[categoryId] = byCategory;
   });
