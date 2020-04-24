@@ -8,19 +8,29 @@ import {
   getVideosByCategory,
 } from "../../../store/reducers/videos";
 
-import { connect } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 
 const AMOUNT_TRENDING_VIDEOS = 12;
 
 const HomeContent = (props) => {
+  
+  //Selector
+  const videosByCategory = useSelector((state) => {
+    return getVideosByCategory(state);
+  }, shallowEqual);
+
+  const mostPopularVideos = useSelector((state) => {
+    return getMostPopularVideos(state);
+  }, shallowEqual);
+  
   const getTrendingVideos = () => {
-    return props.mostPopularVideos.slice(0, AMOUNT_TRENDING_VIDEOS);
+    return mostPopularVideos.slice(0, AMOUNT_TRENDING_VIDEOS);
   };
 
   const getVideoGridsForCategories = () => {
-    const categoryTitles = Object.keys(props.videosByCategory || {});
+    const categoryTitles = Object.keys(videosByCategory || {});
     return categoryTitles.map((categoryTitle, index) => {
-      const videos = props.videosByCategory[categoryTitle];
+      const videos = videosByCategory[categoryTitle];
       // the last video grid element should not have a divider
       const hideDivider = index === categoryTitles.length - 1;
       return (
@@ -52,10 +62,4 @@ const HomeContent = (props) => {
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    videosByCategory: getVideosByCategory(state),
-    mostPopularVideos: getMostPopularVideos(state),
-  };
-}
-export default connect(mapStateToProps, null)(HomeContent);
+export default HomeContent;

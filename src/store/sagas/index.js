@@ -9,7 +9,7 @@ export default function* () {
     //fork(watchVideoCategories),
     //fork(watchMostPopularVideosByCategory),
     //fork(watchWatchDetails),
-    fork(watchCommentThread),
+    //fork(watchCommentThread),
     fork(watchSearchForVideos)
   ]);
 }

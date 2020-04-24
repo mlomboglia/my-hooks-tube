@@ -1,3 +1,6 @@
+import axios from "../../axios-youtube";
+import * as api from "../api/youtube-api";
+
 import {
     createAction,
     createRequestTypes,
@@ -12,3 +15,19 @@ export const thread = {
   success: (response, videoId) => createAction(COMMENT_THREAD[SUCCESS], {response, videoId}),
   failure: (response) => createAction(COMMENT_THREAD[FAILURE], {response}),
 };
+
+export const fetchCommentThread = (videoId, nextPageToken) => {
+  return (dispatch) => {
+    dispatch(thread.request());
+    const config = api.buildCommentThreadRequest(null, videoId, nextPageToken);
+    axios
+      .request(config)
+      .then((response) => {
+        dispatch(thread.success(response.data));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(thread.failure(err));
+      });
+  };
+}

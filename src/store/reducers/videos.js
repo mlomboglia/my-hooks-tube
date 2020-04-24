@@ -10,6 +10,7 @@ import {
   SEARCH_LIST_RESPONSE,
 } from "../api/youtube-api-response-types";
 import { VIDEO_DETAILS, WATCH_DETAILS } from "../actions/watch";
+import { getSearchParam } from "../../shared/url";
 
 const initialState = {
   byId: {},
@@ -266,3 +267,12 @@ export const getAmountComments = createSelector(getVideoById, (video) => {
   }
   return 0;
 });
+
+export const getChannelId = (state, location, name) => {
+  const videoId = getSearchParam(location, name);
+  const video = state.videos.byId[videoId];
+  if (video) {
+    return video.snippet.channelId;
+  }
+  return null;
+};

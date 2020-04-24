@@ -30,27 +30,23 @@ export const fetchWatchDetails = (videoId, channelId) => {
   return (dispatch) => {
     dispatch(details.request());
     let requests = [
-      api.buildVideoDetailRequest(null, videoId),
-      api.buildRelatedVideosRequest(null, videoId),
-      api.buildCommentThreadRequest(null, videoId),
+      axios.request(api.buildVideoDetailRequest(null, videoId)),
+      axios.request(api.buildRelatedVideosRequest(null, videoId)),
+      axios.request(api.buildCommentThreadRequest(null, videoId)),
     ];
 
     if (channelId) {
-      requests.push(api.buildChannelRequest(null, channelId));
+      requests.push(axios.request(api.buildChannelRequest(null, channelId)));
     }
 
-    axios
-      .all(requests)
-      .then((responses) => {
-        console.log(responses);
-        responses.map((response) => {
-          return dispatch(details.success(response.data, videoId));
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        dispatch(details.failure(err));
-      });
+    Promise.all(requests)
+    .then((responses) => {
+      dispatch(details.success(responses, videoId));
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch(details.failure(err));
+    });
   };
 };
 

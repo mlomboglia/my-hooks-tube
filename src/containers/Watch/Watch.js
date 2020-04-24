@@ -1,71 +1,66 @@
 import React, { useEffect, useCallback } from "react";
 
-import {bindActionCreators} from 'redux';
-import * as watchActions from '../../store/actions/watch';
-import {withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-//import {getYoutubeLibraryLoaded} from '../../store/reducers/api';
-import {getSearchParam} from '../../shared/url';
-import {getChannelId} from '../../store/reducers/videos1';
-import {getCommentNextPageToken} from '../../store/reducers/comments';
-import WatchContent from './WatchContent/WatchContent';
-import * as commentActions from '../../store/actions/comments';
+import { withRouter } from "react-router-dom";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { getSearchParam } from "../../shared/url";
+import { getChannelId } from "../../store/reducers/videos";
+import { getCommentNextPageToken } from "../../store/reducers/comments";
+import WatchContent from "./WatchContent/WatchContent";
+
+import * as watchActions from "../../store/actions/watch";
+import * as commentsActions from "../../store/actions/comments";
 
 const Watch = (props) => {
+  const dispatch = useDispatch();
+  const dispatchWatchDetails = useCallback(
+    () => dispatch(watchActions.fetchWatchDetails()),
+    [dispatch]
+  );
 
-  const {
-    //youtubeLibraryLoaded,
-    fetchWatchDetails,
-    channelId,
-    history
-  } = props;
+  const dispatchCommentThread = useCallback(
+    () => dispatch(commentsActions.fetchCommentThread()),
+    [dispatch]
+  );
+
+  const channelId = useSelector((state) => {
+    return getChannelId(state, props.location, "v");
+  }, shallowEqual);
+
+  const nextPageToken = useSelector((state) => {
+    return getCommentNextPageToken(state, props.location);
+  }, shallowEqual);
 
   const getVideoId = useCallback(() => {
-    return getSearchParam(props.location, 'v');
+    return getSearchParam(props.location, "v");
   }, [props.location]);
 
   const fetchWatchContent = useCallback(() => {
     const videoId = getVideoId();
-    if(!videoId) {
-      history.push('/');
+    if (!videoId) {
+      props.history.push("/");
     }
-    fetchWatchDetails(videoId, channelId);
-  }, [fetchWatchDetails, getVideoId, channelId, history]);
+    dispatchWatchDetails(videoId, channelId);
+  }, [dispatchWatchDetails, getVideoId, channelId, props.history]);
 
   const fetchMoreComments = () => {
     if (props.nextPageToken) {
-      props.fetchCommentThread(getVideoId(), props.nextPageToken);
+      props.dispatchCommentThread(getVideoId(), props.nextPageToken);
     }
   };
 
   useEffect(() => {
-      fetchWatchContent();
-    
-  }, [fetchWatchContent, fetchWatchDetails])
-  
+    fetchWatchContent();
+  }, [fetchWatchContent, dispatchWatchDetails]);
+
   const videoId = getVideoId();
   return (
-    <WatchContent videoId={videoId}
-                    channelId={channelId}
-                    bottomReachedCallback={fetchMoreComments}
-                    nextPageToken={props.nextPageToken}
-      />
+    <WatchContent
+      videoId={videoId}
+      channelId={channelId}
+      bottomReachedCallback={fetchMoreComments}
+      nextPageToken={props.nextPageToken}
+    />
   );
-};  
+};
 
-function mapStateToProps(state, props) {
-  return {
-    //youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
-    channelId: getChannelId(state, props.location, 'v'),
-    nextPageToken: getCommentNextPageToken(state, props.location),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  const fetchWatchDetails = watchActions.details.request;
-  const fetchCommentThread = commentActions.thread.request;
-  return bindActionCreators({fetchWatchDetails, fetchCommentThread}, dispatch);
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Watch));
-
+export default withRouter(Watch);

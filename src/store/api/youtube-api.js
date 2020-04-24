@@ -46,6 +46,7 @@ export function buildVideoDetailRequest(videoId) {
     {
       part: "snippet,statistics,contentDetails",
       id: videoId,
+      key: process.env.REACT_APP_API_KEY,
       fields:
         "kind,items(contentDetails/duration,id,snippet(channelId,channelTitle,description,publishedAt,thumbnails/medium,title),statistics)",
     },
@@ -60,6 +61,7 @@ export function buildChannelRequest(channelId) {
     {
       part: "snippet,statistics",
       id: channelId,
+      key: process.env.REACT_APP_API_KEY,
       fields:
         "kind,items(id,snippet(description,thumbnails/medium,title),statistics/subscriberCount)",
     },
@@ -74,6 +76,7 @@ export function buildCommentThreadRequest(videoId, nextPageToken) {
     {
       part: "id,snippet",
       pageToken: nextPageToken,
+      key: process.env.REACT_APP_API_KEY,
       videoId,
     },
     null
