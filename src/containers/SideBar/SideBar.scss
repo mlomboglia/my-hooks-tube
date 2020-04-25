@@ -1,16 +1,22 @@
 @import '../../styles/shared.scss';
 
+$sidebar-hover-color: #ebebeb;
 .ui.menu.fixed.side-nav {
-    background-color: #f5f5f5;
-    margin-top: $header-nav-height;
-    padding-bottom: $header-nav-height;
-    overflow-y: auto;
-  
-    .sidebar-item:hover {
-      background: #ebebeb;
-    }
+  background-color: #f5f5f5;
+  margin-top: $header-nav-height;
+  overflow-y: auto;
+  padding-bottom: $header-nav-height;
+
+  .sidebar-item:hover {
+    background: $sidebar-hover-color;
   }
-  
-  .side-nav.ui.vertical.menu {
-    width: 17rem;
+
+  .subscription:hover {
+    background: #ebebeb;
+    cursor: pointer;
   }
+}
+
+.side-nav.ui.vertical.menu {
+  width: $sidebar-left-width;
+}

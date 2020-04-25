@@ -6,13 +6,27 @@ import {
   getSearchResults,
 } from "../../store/reducers/search";
 import * as searchActions from "../../store/actions/search";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { getSearchParam } from "../../shared/url";
-import VideoList from '../../components/VideoList/VideoList';
+import VideoList from "../../components/VideoList/VideoList";
 
 const Search = (props) => {
-  const { history } = props;
+
+  //Dispatch
+  const dispatch = useDispatch();
+  const dispatchSearchForVideos = useCallback(
+    () => dispatch(searchActions.searchForVideos()),
+    [dispatch]
+  );
+
+  //Selector
+  const searchResults = useSelector((state) => {
+    return getSearchResults(state, props.location.search);
+  }, shallowEqual);
+
+  const nextPageToken = useSelector((state) => {
+    return getSearchNextPageToken(state, props.location.search);
+  }, shallowEqual);
 
   const getSearchQuery = useCallback(() => {
     return getSearchParam(props.location, "search_query");
@@ -20,42 +34,30 @@ const Search = (props) => {
 
   const searchForVideos = useCallback(() => {
     const searchQuery = getSearchQuery();
-      searchForVideos(searchQuery);
-    
+    dispatchSearchForVideos(searchQuery);
   }, [getSearchQuery]);
 
   const bottomReachedCallback = () => {
-    if(props.nextPageToken) {
-      props.searchForVideos(getSearchQuery(), props.nextPageToken, 25);
+    if (nextPageToken) {
+      searchForVideos(getSearchQuery(), nextPageToken, 25);
     }
   };
 
   useEffect(() => {
     if (!getSearchQuery()) {
       // redirect to home component if search query is not there
-      history.push("/");
+      props.history.push("/");
     }
     searchForVideos();
-  }, [getSearchQuery, searchForVideos, history]);
+  }, [getSearchQuery, searchForVideos]);
 
   return (
     <VideoList
-        bottomReachedCallback={bottomReachedCallback}
-        showLoader={true}
-        videos={props.searchResults}/>
+      bottomReachedCallback={bottomReachedCallback}
+      showLoader={true}
+      videos={searchResults}
+    />
   );
 };
 
-function mapDispatchToProps(dispatch) {
-  const searchForVideos = searchActions.forVideos.request;
-  return bindActionCreators({ searchForVideos }, dispatch);
-}
-
-function mapStateToProps(state, props) {
-  return {
-    searchResults: getSearchResults(state, props.location.search),
-    nextPageToken: getSearchNextPageToken(state, props.location.search),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default Search;

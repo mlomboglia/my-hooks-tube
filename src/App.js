@@ -14,8 +14,8 @@ const App = (props) => {
     <AppLayout>
       <Switch>
           <Route path="/feed/trending" component={Trending}/>
-          <Route path="/results" render={() => <Search key={props.location.key}/>}/>
-          <Route path="/watch" render={() => <Watch key={props.location.key}/>}/>
+          <Route path="/results" render={props => <Search {...props}/>}/>
+          <Route path="/watch" render={props => <Watch {...props}/>}/>
           <Route path="/" component={Home}/>
       </Switch>
     </AppLayout>

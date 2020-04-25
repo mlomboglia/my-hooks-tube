@@ -11,19 +11,39 @@ import {
   getRelatedVideos,
   getVideoById,
 } from "../../../store/reducers/videos";
-import { connect } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { getChannel } from "../../../store/reducers/channels";
 import { getCommentsForVideo } from "../../../store/reducers/comments";
 import InfiniteScroll from "../../../components/InfiniteScroll/InfiniteScroll";
 
 const WatchContent = (props) => {
+  const relatedVideos = useSelector((state) => {
+    return getRelatedVideos(state, props.videoId);
+  }, shallowEqual);
+
+  const video = useSelector((state) => {
+    return getVideoById(state, props.videoId);
+  }, shallowEqual);
+
+  const channel = useSelector((state) => {
+    return getChannel(state, props.channelId);
+  }, shallowEqual);
+
+  const comments = useSelector((state) => {
+    return getCommentsForVideo(state, props.videoId);
+  }, shallowEqual);
+
+  const amountComments = useSelector((state) => {
+    return getAmountComments(state, props.videoId);
+  }, shallowEqual);
+
   if (!props.videoId) {
     return <div />;
   }
 
   const shouldShowLoader = () => {
     return !!props.nextPageToken;
-  }
+  };
 
   return (
     <InfiniteScroll
@@ -32,30 +52,20 @@ const WatchContent = (props) => {
     >
       <div className="watch-grid">
         <Video className="video" id={props.videoId} />
-        <VideoMetadata video={props.video} />
+        <VideoMetadata video={video} />
         <VideoInfoBox
           className="video-info-box"
-          video={props.video}
-          channel={props.channel}
+          video={video}
+          channel={channel}
         />
         <Comments
-          comments={props.comments}
-          amountComments={props.amountComments}
+          comments={comments}
+          amountComments={amountComments}
         />
-        <RelatedVideos className="relatedVideos" videos={props.relatedVideos} />
+        <RelatedVideos className="relatedVideos" videos={relatedVideos} />
       </div>
     </InfiniteScroll>
   );
 };
 
-function mapStateToProps(state, props) {
-  return {
-    relatedVideos: getRelatedVideos(state, props.videoId),
-    video: getVideoById(state, props.videoId),
-    channel: getChannel(state, props.channelId),
-    comments: getCommentsForVideo(state, props.videoId),
-    amountComments: getAmountComments(state, props.videoId),
-  };
-}
-
-export default connect(mapStateToProps, null)(WatchContent);
+export default WatchContent;

@@ -1,58 +1,68 @@
-import React, { useEffect } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import "./Trending.scss";
+import React, { useEffect, useCallback } from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import {
   allMostPopularVideosLoaded,
   getMostPopularVideos,
   getMostPopularVideosNextPageToken,
-} from "../../store/reducers/videos1";
+} from "../../store/reducers/videos";
 import * as videoActions from "../../store/actions/videos";
-//import { getYoutubeLibraryLoaded } from "../../store/reducers/api";
 import VideoList from "../../components/VideoList/VideoList";
 
 const Trending = (props) => {
-  const { fetchMostPopularVideos, nextPageToken } = props;
+  //Dispatch
+  const dispatch = useDispatch();
+  const dispatchMostPopularVideos = useCallback(
+    (amount, loadDescription, nextPageToken) =>
+      dispatch(
+        videoActions.fetchMostPopularVideos(
+          amount,
+          loadDescription,
+          nextPageToken
+        )
+      ),
+    [dispatch]
+  );
+
+  //Selector
+  const videos = useSelector((state) => {
+    return getMostPopularVideos(state);
+  }, shallowEqual);
+
+  const isAllMostPopularVideosLoaded = useSelector((state) => {
+    return allMostPopularVideosLoaded(state);
+  }, shallowEqual);
+
+  const nextPageToken = useSelector((state) => {
+    return getMostPopularVideosNextPageToken(state);
+  }, shallowEqual);
 
   const shouldShowLoader = () => {
-    return !props.allMostPopularVideosLoaded;
+    return !isAllMostPopularVideosLoaded;
   };
 
-  const loaderActive = shouldShowLoader();
-
   useEffect(() => {
-    if (nextPageToken) {
-      fetchMostPopularVideos(20, true, nextPageToken);
-    }
-  }, [fetchMostPopularVideos, nextPageToken]);
+    fetchTrendingVideos();
+  }, [dispatchMostPopularVideos]);
 
   const fetchMoreVideos = () => {
     if (nextPageToken) {
-      props.fetchMostPopularVideos(12, true, nextPageToken);
+      dispatchMostPopularVideos(12, true, nextPageToken);
     }
   };
+
+  const fetchTrendingVideos = () => {
+    dispatchMostPopularVideos(20, true);
+  }
+
+  const loaderActive = shouldShowLoader();
 
   return (
     <VideoList
       bottomReachedCallback={fetchMoreVideos}
       showLoader={loaderActive}
-      videos={props.videos}
+      videos={videos}
     />
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    videos: getMostPopularVideos(state),
-    //youtubeLibraryLoaded: getYoutubeLibraryLoaded(state),
-    //allMostPopularVideosLoaded: allMostPopularVideosLoaded(state),
-    nextPageToken: getMostPopularVideosNextPageToken(state),
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  const fetchMostPopularVideos = videoActions.mostPopular.request;
-  return bindActionCreators({ fetchMostPopularVideos }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Trending);
+export default Trending;

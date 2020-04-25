@@ -277,3 +277,18 @@ export const getChannelId = (state, location, name) => {
   }
   return null;
 };
+
+export const allMostPopularVideosLoaded = createSelector(
+  [getMostPopular],
+  (mostPopular) => {
+    const amountFetchedItems = mostPopular.items ? mostPopular.items.length : 0;
+    return amountFetchedItems === mostPopular.totalResults;
+  }
+);
+
+export const getMostPopularVideosNextPageToken = createSelector(
+  [getMostPopular],
+  (mostPopular) => {
+    return mostPopular.nextPageToken;
+  }
+);

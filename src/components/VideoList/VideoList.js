@@ -12,7 +12,6 @@ const VideoList = (props) => {
     if (!firstVideo.snippet.description) {
       return null;
     }
-
     return props.videos.map((video) => (
       <VideoPreview
         horizontal={true}
