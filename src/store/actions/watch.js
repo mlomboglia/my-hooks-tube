@@ -18,9 +18,7 @@ export const details = {
 
 export const VIDEO_DETAILS = createRequestTypes("VIDEO_DETAILS");
 export const videoDetails = {
-  request: () => {
-    throw Error("not implemented");
-  },
+  request: () => createAction(VIDEO_DETAILS.REQUEST),
   success: (response) => createAction(VIDEO_DETAILS.SUCCESS, { response }),
   failure: (response) => createAction(VIDEO_DETAILS.FAILURE, { response }),
 };
@@ -41,6 +39,7 @@ export const fetchWatchDetails = (videoId, channelId) => {
     Promise.all(requests)
       .then((responses) => {
         dispatch(details.success(responses, videoId));
+        dispatch(fetchVideoDetails(responses, channelId));
       })
       .catch((err) => {
         console.log(err);
@@ -52,16 +51,15 @@ export const fetchWatchDetails = (videoId, channelId) => {
 export const fetchVideoDetails = (responses, shouldFetchChannelInfo) => {
   return (dispatch) => {
     dispatch(videoDetails.request());
-
     const searchListResponse = responses.find(
-      (response) => response.result.kind === SEARCH_LIST_RESPONSE
+      (response) => response.data.kind === SEARCH_LIST_RESPONSE
     );
-    const relatedVideoIds = searchListResponse.result.items.map(
+    const relatedVideoIds = searchListResponse.data.items.map(
       (relatedVideo) => relatedVideo.id.videoId
     );
 
     const requests = relatedVideoIds.map((relatedVideoId) => {
-      return api.buildVideoDetailRequest(null, relatedVideoId);
+      return axios.request(api.buildVideoDetailRequest(relatedVideoId));
     });
 
     if (shouldFetchChannelInfo) {
@@ -70,27 +68,23 @@ export const fetchVideoDetails = (responses, shouldFetchChannelInfo) => {
       // this is only needed, when a user directly accesses .../watch?v=1234
       // because then we only know the video id
       const videoDetailResponse = responses.find(
-        (response) => response.result.kind === VIDEO_LIST_RESPONSE
+        (response) => response.data.kind === VIDEO_LIST_RESPONSE
       );
-      const videos = videoDetailResponse.result.items;
+      const videos = videoDetailResponse.data.items;
       if (videos && videos.length) {
         requests.push(
-          api.buildChannelRequest(null, videos[0].snippet.channelId)
+          axios.request(api.buildChannelRequest(videos[0].snippet.channelId))
         );
       }
     }
 
-    axios
-      .all(requests)
+    Promise.all(requests)
       .then((responses) => {
-        console.log(responses);
-        responses.map((response) => {
-          return dispatch(videoDetails.success(response.data));
-        });
+        dispatch(videoDetails.success(responses));
       })
       .catch((err) => {
         console.log(err);
         dispatch(videoDetails.failure(err));
       });
-  };
+    }
 };

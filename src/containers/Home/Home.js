@@ -44,12 +44,10 @@ const Home = (props) => {
   }, shallowEqual);
 
   useEffect(() => {
-    console.log("useEffect: dispatchMostPopularVideos");
     dispatchMostPopularVideos();
   }, [dispatchMostPopularVideos]);
 
   useEffect(() => {
-    console.log("useEffect: dispatchVideoCategories");
     dispatchVideoCategories();
   }, [dispatchVideoCategories]);
 

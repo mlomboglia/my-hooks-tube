@@ -19,7 +19,6 @@ const reducer = (state = initialState, action) => {
 export default reducer;
 
 function reduceWatchDetails(responses, prevState) {
-  console.log(responses);
   const channelResponse = responses.find(
     (response) => response.data.kind === CHANNEL_LIST_RESPONSE
   );

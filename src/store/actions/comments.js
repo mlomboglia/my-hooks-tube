@@ -19,7 +19,7 @@ export const thread = {
 export const fetchCommentThread = (videoId, nextPageToken) => {
   return (dispatch) => {
     dispatch(thread.request());
-    const config = api.buildCommentThreadRequest(null, videoId, nextPageToken);
+    const config = api.buildCommentThreadRequest(videoId, nextPageToken);
     axios
       .request(config)
       .then((response) => {

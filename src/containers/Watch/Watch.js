@@ -18,7 +18,7 @@ const Watch = (props) => {
   );
 
   const dispatchCommentThread = useCallback(
-    () => dispatch(commentsActions.fetchCommentThread()),
+    (videoId, nextPageToken) => dispatch(commentsActions.fetchCommentThread(videoId, nextPageToken)),
     [dispatch]
   );
 
@@ -43,8 +43,8 @@ const Watch = (props) => {
   }, [dispatchWatchDetails, getVideoId, channelId, props.history]);
 
   const fetchMoreComments = () => {
-    if (props.nextPageToken) {
-      props.dispatchCommentThread(getVideoId(), props.nextPageToken);
+    if (nextPageToken) {
+      dispatchCommentThread(getVideoId(), nextPageToken);
     }
   };
 
@@ -58,7 +58,7 @@ const Watch = (props) => {
       videoId={videoId}
       channelId={channelId}
       bottomReachedCallback={fetchMoreComments}
-      nextPageToken={props.nextPageToken}
+      nextPageToken={nextPageToken}
     />
   );
 };

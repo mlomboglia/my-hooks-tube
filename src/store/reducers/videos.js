@@ -85,7 +85,6 @@ function reduceFetchMostPopularVideosByCategory(
   let videoMap = {};
   let byCategoryMap = {};
 
-  console.log("reduceFetchMostPopularVideosByCategory");
   responses.forEach((response, index) => {
     // ignore answer if there was an error
     if (response instanceof Error) return;
@@ -128,7 +127,6 @@ function groupVideosByIdAndCategory(response) {
 }
 
 function reduceWatchDetails(responses, prevState) {
-  console.log(responses);
   const videoDetailResponse = responses.find(
     (r) => r.data.kind === VIDEO_LIST_RESPONSE
   );
@@ -155,8 +153,9 @@ function reduceRelatedVideosRequest(responses) {
     (r) => r.data.kind === SEARCH_LIST_RESPONSE
   );
   const { pageInfo, items, nextPageToken } = relatedVideosResponse.data;
+  console.log(items);
   const relatedVideoIds = items.map((video) => video.id);
-
+  console.log(relatedVideoIds);
   return {
     totalResults: pageInfo.totalResults,
     nextPageToken,
@@ -253,6 +252,12 @@ export const getRelatedVideos = createSelector(
   (state) => state.videos.byId,
   (relatedVideoIds, videos) => {
     if (relatedVideoIds) {
+      console.log(relatedVideoIds);
+      console.log(videos);
+      console.log(relatedVideoIds.map((videoId) => {
+          //console.log(videoId);
+          return videos[videoId];
+      }));
       // filter kicks out null values we might have
       return relatedVideoIds
         .map((videoId) => videos[videoId])

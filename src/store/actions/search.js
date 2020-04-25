@@ -24,7 +24,6 @@ export const forVideos = {
 };
 
 export const searchForVideos = (searchQuery, nextPageToken, amount) => {
-  console.log("searchForVideos");
   return (dispatch) => {
     dispatch(forVideos.request());
     const config = api.buildSearchRequest(

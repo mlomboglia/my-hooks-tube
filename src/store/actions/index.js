@@ -8,17 +8,10 @@ export function createRequestTypes(action) {
   }
 
   return [REQUEST, SUCCESS, FAILURE].reduce(
-      (result, type) => Object.assign({}, result, { [type]: `${action}_${type}` }),
-      {}
-    );
-  
-  //console.log(base);
-  //return [REQUEST, SUCCESS, FAILURE].reduce((acc, type) => {
-  //  console.log(acc);
-  //  console.log(type);
-  //  acc[type] = `${base}_${type}`;
-  //  return acc;
-  //}, {});
+    (result, type) =>
+      Object.assign({}, result, { [type]: `${action}_${type}` }),
+    {}
+  );
 }
 
 export function createAction(type, payload = {}) {
@@ -34,6 +27,3 @@ export function ignoreErrors(fn, ...args) {
     return fn(...args).then(ignoreErrorCallback, ignoreErrorCallback);
   };
 }
-
-
-
