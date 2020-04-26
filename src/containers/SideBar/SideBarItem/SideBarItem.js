@@ -7,7 +7,6 @@ const SideBarItem = (props) => {
   
   const shouldBeHighlighted = () => {
     const { pathname } = props.location;
-    console.log("pathname = ", pathname);
     if (props.path === "/") {
       return pathname === props.path;
     }

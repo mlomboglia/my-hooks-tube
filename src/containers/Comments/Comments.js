@@ -10,6 +10,7 @@ const Comments = (props) => {
   }
 
   const comments = props.comments.map((comment) => {
+    console.log(comment.id);
     return <Comment comment={comment} key={comment.id}/>
   });
 

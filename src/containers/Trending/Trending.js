@@ -41,7 +41,7 @@ const Trending = (props) => {
   };
 
   useEffect(() => {
-    fetchTrendingVideos();
+    dispatchMostPopularVideos(20, true);
   }, [dispatchMostPopularVideos]);
 
   const fetchMoreVideos = () => {
@@ -49,10 +49,6 @@ const Trending = (props) => {
       dispatchMostPopularVideos(12, true, nextPageToken);
     }
   };
-
-  const fetchTrendingVideos = () => {
-    dispatchMostPopularVideos(20, true);
-  }
 
   const loaderActive = shouldShowLoader();
 

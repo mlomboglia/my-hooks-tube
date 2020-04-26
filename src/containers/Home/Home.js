@@ -64,7 +64,6 @@ const Home = () => {
   }, [videoCategories]);
 
   const bottomReachedCallback = () => {
-    console.log(isVideoCategoriesLoaded);
     if (!isVideoCategoriesLoaded) {
       return;
     }
