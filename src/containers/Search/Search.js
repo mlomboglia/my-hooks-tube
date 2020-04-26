@@ -12,15 +12,23 @@ import VideoList from "../../components/VideoList/VideoList";
 import { useLocation, useHistory } from "react-router-dom";
 
 const Search = () => {
-
   const location = useLocation();
   const history = useHistory();
+
+  const getSearchQuery = useCallback(() => {
+    return getSearchParam(location, "search_query");
+  }, [location]);
 
   //Dispatch
   const dispatch = useDispatch();
   const dispatchSearchForVideos = useCallback(
-    () => dispatch(searchActions.searchForVideos()),
-    [dispatch]
+    (nextPageToken, amount) => {
+      const searchQuery = getSearchQuery();
+      dispatch(
+        searchActions.searchForVideos(searchQuery, nextPageToken, amount)
+      );
+    },
+    [getSearchQuery, dispatch]
   );
 
   //Selector
@@ -32,18 +40,9 @@ const Search = () => {
     return getSearchNextPageToken(state, location.search);
   }, shallowEqual);
 
-  const getSearchQuery = useCallback(() => {
-    return getSearchParam(location, "search_query");
-  }, [location]);
-
-  const searchForVideos = useCallback(() => {
-    const searchQuery = getSearchQuery();
-    dispatchSearchForVideos(searchQuery);
-  }, [getSearchQuery]);
-
   const bottomReachedCallback = () => {
     if (nextPageToken) {
-      searchForVideos(getSearchQuery(), nextPageToken, 25);
+      dispatchSearchForVideos(nextPageToken, 25);
     }
   };
 
@@ -52,8 +51,8 @@ const Search = () => {
       // redirect to home component if search query is not there
       history.push("/");
     }
-    searchForVideos();
-  }, [getSearchQuery, searchForVideos, history]);
+    dispatchSearchForVideos();
+  }, [getSearchQuery, dispatchSearchForVideos, history]);
 
   return (
     <VideoList

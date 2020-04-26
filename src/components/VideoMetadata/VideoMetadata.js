@@ -7,7 +7,7 @@ const VideoMetadata = (props) => {
   if (!props.video || !props.video.statistics) {
     return <div />;
   }
-  const viewCount = Number(props.viewCount).toLocaleString() || "";
+  const viewCount = Number(props.video.statistics.viewCount).toLocaleString();
 
   return (
     <div className="video-metadata">

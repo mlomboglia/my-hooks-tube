@@ -2,6 +2,7 @@ import React from "react";
 import SideBar from "../../containers/SideBar/SideBar";
 import InfiniteScroll from "../InfiniteScroll/InfiniteScroll";
 import VideoPreview from "../../components/VideoPreview/VideoPreview";
+import './VideoList.scss';
 
 const VideoList = (props) => {
   const getVideoPreviews = () => {
@@ -29,7 +30,7 @@ const VideoList = (props) => {
   return (
     <React.Fragment>
       <SideBar />
-      <div className="video-list">
+      <div className='video-list'>
         <InfiniteScroll
           bottomReachedCallback={props.bottomReachedCallback}
           showLoader={props.showLoader}

@@ -45,6 +45,7 @@ const WatchContent = (props) => {
     return !!props.nextPageToken;
   };
 
+  console.log(video);
   return (
     <InfiniteScroll
       bottomReachedCallback={props.bottomReachedCallback}
