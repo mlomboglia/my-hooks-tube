@@ -17,12 +17,14 @@ export const thread = {
 };
 
 export const fetchCommentThread = (videoId, nextPageToken) => {
+  console.log("fetchCommentThread")
   return (dispatch) => {
     dispatch(thread.request());
     const config = api.buildCommentThreadRequest(videoId, nextPageToken);
     axios
       .request(config)
       .then((response) => {
+        console.log(response);
         dispatch(thread.success(response.data));
       })
       .catch((err) => {

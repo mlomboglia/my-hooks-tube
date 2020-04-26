@@ -55,7 +55,6 @@ export const fetchMostPopularVideos = (
 };
 
 export const fetchVideoCategories = () => {
-  console.log("fetchVideoCategories");
   return (dispatch) => {
     dispatch(categories.request());
     const config = api.buildVideoCategoriesRequest();

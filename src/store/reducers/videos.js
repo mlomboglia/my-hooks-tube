@@ -153,9 +153,7 @@ function reduceRelatedVideosRequest(responses) {
     (r) => r.data.kind === SEARCH_LIST_RESPONSE
   );
   const { pageInfo, items, nextPageToken } = relatedVideosResponse.data;
-  console.log(items);
-  const relatedVideoIds = items.map((video) => video.id);
-  console.log(relatedVideoIds);
+  const relatedVideoIds = items.map((video) => video.id.videoId);
   return {
     totalResults: pageInfo.totalResults,
     nextPageToken,
@@ -252,12 +250,6 @@ export const getRelatedVideos = createSelector(
   (state) => state.videos.byId,
   (relatedVideoIds, videos) => {
     if (relatedVideoIds) {
-      console.log(relatedVideoIds);
-      console.log(videos);
-      console.log(relatedVideoIds.map((videoId) => {
-          //console.log(videoId);
-          return videos[videoId];
-      }));
       // filter kicks out null values we might have
       return relatedVideoIds
         .map((videoId) => videos[videoId])

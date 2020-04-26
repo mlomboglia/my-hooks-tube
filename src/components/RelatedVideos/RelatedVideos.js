@@ -6,8 +6,6 @@ import "./RelatedVideos.scss";
 
 const RelatedVideos = (props) => {
 
-  console.log("relatedvideos");
-  console.log(props.videos);
   if (!props.videos || !props.videos.length) {
     return <div className="related-videos" />;
   }
@@ -25,8 +23,6 @@ const RelatedVideos = (props) => {
       horizontal={true}
     />
   ));
-
-  console.log(relatedVideosPreviews);
 
   return (
     <div className="related-videos">

@@ -11,7 +11,7 @@ import {
 } from "../../store/reducers/videos";
 import * as videoActions from "../../store/actions/videos";
 
-const Home = (props) => {
+const Home = () => {
   const [categoryIndex, setCategoryIndex] = useState(0);
 
   //Dispatch

@@ -28,6 +28,7 @@ function reduceWatchDetails(responses, videoId, prevState) {
 }
 
 function reduceCommentThread(response, videoId, prevState) {
+  console.log("reduceCommentThread");
   if (!response) {
     return prevState;
   }
@@ -35,6 +36,8 @@ function reduceCommentThread(response, videoId, prevState) {
     acc[item.id] = item;
     return acc;
   }, {});
+
+  
 
   // if we have already fetched some comments for a particular video
   // we just append the ids for the new comments
@@ -81,5 +84,6 @@ const getComment = (state, location) => {
   return state.comments.byVideo[videoId];
 };
 export const getCommentNextPageToken = createSelector(getComment, (comment) => {
+  console.log(comment);
   return comment ? comment.nextPageToken : null;
 });

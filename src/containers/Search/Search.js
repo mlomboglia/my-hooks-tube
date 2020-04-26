@@ -9,8 +9,12 @@ import * as searchActions from "../../store/actions/search";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { getSearchParam } from "../../shared/url";
 import VideoList from "../../components/VideoList/VideoList";
+import { useLocation, useHistory } from "react-router-dom";
 
-const Search = (props) => {
+const Search = () => {
+
+  const location = useLocation();
+  const history = useHistory();
 
   //Dispatch
   const dispatch = useDispatch();
@@ -21,16 +25,16 @@ const Search = (props) => {
 
   //Selector
   const searchResults = useSelector((state) => {
-    return getSearchResults(state, props.location.search);
+    return getSearchResults(state, location.search);
   }, shallowEqual);
 
   const nextPageToken = useSelector((state) => {
-    return getSearchNextPageToken(state, props.location.search);
+    return getSearchNextPageToken(state, location.search);
   }, shallowEqual);
 
   const getSearchQuery = useCallback(() => {
-    return getSearchParam(props.location, "search_query");
-  }, []);
+    return getSearchParam(location, "search_query");
+  }, [location]);
 
   const searchForVideos = useCallback(() => {
     const searchQuery = getSearchQuery();
@@ -46,10 +50,10 @@ const Search = (props) => {
   useEffect(() => {
     if (!getSearchQuery()) {
       // redirect to home component if search query is not there
-      props.history.push("/");
+      history.push("/");
     }
     searchForVideos();
-  }, [getSearchQuery, searchForVideos]);
+  }, [getSearchQuery, searchForVideos, history]);
 
   return (
     <VideoList
