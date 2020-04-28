@@ -42,13 +42,8 @@ const WatchContent = (props) => {
   }
 
   const shouldShowLoader = () => {
-    console.log("showLoader");
-    console.log(props.nextPageToken);
     return !!props.nextPageToken;
   };
-
-  console.log("WatchContent");
-  console.log(comments);
 
   return (
     <InfiniteScroll
