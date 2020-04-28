@@ -21,14 +21,11 @@ export default function (state = initialState, action) {
 }
 
 function reduceWatchDetails(responses, videoId, prevState) {
-  const commentThreadResponse = responses.find(
-    (res) => res.data.kind === COMMENT_THREAD_LIST_RESPONSE
-  );
+  const commentThreadResponse = responses.find(res => res.data.kind === COMMENT_THREAD_LIST_RESPONSE);
   return reduceCommentThread(commentThreadResponse.data, videoId, prevState);
 }
 
 function reduceCommentThread(response, videoId, prevState) {
-  console.log("reduceCommentThread");
   if (!response) {
     return prevState;
   }
@@ -37,20 +34,17 @@ function reduceCommentThread(response, videoId, prevState) {
     return acc;
   }, {});
 
-  
-
   // if we have already fetched some comments for a particular video
   // we just append the ids for the new comments
   const prevCommentIds = prevState.byVideo[videoId]
     ? prevState.byVideo[videoId].ids
     : [];
   const commentIds = [...prevCommentIds, ...Object.keys(newComments)];
-
   const byVideoComment = {
     nextPageToken: response.nextPageToken,
     ids: commentIds,
   };
-
+ 
   return {
     ...prevState,
     byId: {
@@ -75,6 +69,7 @@ export const getCommentsForVideo = createSelector(
   getCommentIdsForVideo,
   (state) => state.comments.byId,
   (commentIds, allComments) => {
+    console.log(commentIds);
     return commentIds.map((commentId) => allComments[commentId]);
   }
 );
@@ -84,6 +79,5 @@ const getComment = (state, location) => {
   return state.comments.byVideo[videoId];
 };
 export const getCommentNextPageToken = createSelector(getComment, (comment) => {
-  console.log(comment);
   return comment ? comment.nextPageToken : null;
 });

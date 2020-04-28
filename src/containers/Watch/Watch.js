@@ -37,24 +37,19 @@ const Watch = () => {
     return getSearchParam(location, "v");
   }, [location]);
 
-  const fetchWatchContent = useCallback(() => {
-    const videoId = getVideoId();
-    if (!videoId) {
-      history.push("/");
-    }
-    dispatchWatchDetails(videoId, channelId);
-  }, [dispatchWatchDetails, getVideoId, channelId, history]);
-
   const fetchMoreComments = () => {
-    console.log("fetchMoreComments");
     if (nextPageToken) {
       dispatchCommentThread(getVideoId(), nextPageToken);
     }
   };
 
   useEffect(() => {
-    fetchWatchContent();
-  }, [fetchWatchContent, dispatchWatchDetails]);
+    const videoId = getVideoId();
+    if (!videoId) {
+      history.push("/");
+    }
+    dispatchWatchDetails(videoId, channelId);
+  }, [getVideoId, dispatchWatchDetails, channelId, history]);
 
   const videoId = getVideoId();
   return (

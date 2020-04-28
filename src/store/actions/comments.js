@@ -17,7 +17,6 @@ export const thread = {
 };
 
 export const fetchCommentThread = (videoId, nextPageToken) => {
-  console.log("fetchCommentThread")
   return (dispatch) => {
     dispatch(thread.request());
     const config = api.buildCommentThreadRequest(videoId, nextPageToken);
@@ -25,7 +24,7 @@ export const fetchCommentThread = (videoId, nextPageToken) => {
       .request(config)
       .then((response) => {
         console.log(response);
-        dispatch(thread.success(response.data));
+        dispatch(thread.success(response.data, videoId));
       })
       .catch((err) => {
         console.log(err);

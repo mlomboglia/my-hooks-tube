@@ -42,10 +42,14 @@ const WatchContent = (props) => {
   }
 
   const shouldShowLoader = () => {
+    console.log("showLoader");
+    console.log(props.nextPageToken);
     return !!props.nextPageToken;
   };
 
-  console.log(video);
+  console.log("WatchContent");
+  console.log(comments);
+
   return (
     <InfiniteScroll
       bottomReachedCallback={props.bottomReachedCallback}
