@@ -1,5 +1,6 @@
 # 1 About
-This repository is based on the tutorial series provided by [productioncoder.com]. 
+This repository is based on the tutorial series provided by [productioncoder.com].
+
 It has then been updated to:
 * Use only functional components with React Hooks. 
 * The gapi approach has also been changed for a http axios approach. 
