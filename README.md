@@ -1,8 +1,9 @@
 # 1 About
 This repository is based on the tutorial series provided by [productioncoder.com]. 
-It has then been updated to use only functional components with React Hooks. 
-The gapi approach has also been changed for a http axios approach. 
-React saga has been removed for a simpler code.
+It has then been updated to:
+* Use only functional components with React Hooks. 
+* The gapi approach has also been changed for a http axios approach. 
+* React saga has been removed for a simpler code.
 
 <h3 align="center">Please help this repo with a ⭐️ if you find it useful! 😁</h3>
 
